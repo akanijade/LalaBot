@@ -1,0 +1,6 @@
+app = "lalabot"
+
+primary_region = "ams"
+
+[build]
+  dockerfile = "Dockerfile"
