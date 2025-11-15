@@ -76,7 +76,7 @@ intents.message_content = True
 intents.messages = True
 client = discord.Client(intents=intents)
 tree = app_commands.CommandTree(client)
-data = load_data()
+# data = load_data()
 
 @client.event
 async def on_ready():
@@ -86,11 +86,12 @@ async def on_ready():
 
 @client.event
 async def on_message(message):
+    global data
     if message.author == client.user:
         return
  
     msg = message.content
-
+    
     if msg == '/test':
         await message.channel.send('ping pong!')
         
@@ -187,11 +188,14 @@ async def help(interaction: discord.Interaction):
     )
     await interaction.response.send_message(embed=embed)
 
-while __name__ == '__main__':
-  try:
-    keep_alive()
-    client.run(os.environ['TOKEN'])
-  except discord.errors.HTTPException as e:
-    print(e)
-    print("\n\n\nBLOCKED BY RATE LIMITS\nRESTARTING NOW\n\n\n")
-    os.system('kill 1')
+keep_alive()
+client.run(os.environ['TOKEN'])
+
+# while __name__ == '__main__':
+#   try:
+#     keep_alive()
+#     client.run(os.environ['TOKEN'])
+#   except discord.errors.HTTPException as e:
+#     print(e)
+#     print("\n\n\nBLOCKED BY RATE LIMITS\nRESTARTING NOW\n\n\n")
+#     os.system('kill 1')
