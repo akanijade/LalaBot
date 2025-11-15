@@ -15,12 +15,24 @@ import os
 
 DATA_FILE = "data.json"
 
+# sad_words = [
+#     "sad", "depressed", "unhappy", "angry", "miserable", "depressing",
+#     "heartbroken", "upset", " bad ", "worried", "sorry", "dissapointed",
+#     "shoot my head", "cut my life into pieces", "kill me", "suicide", 
+#     "my dick is small", "i want to die", "suicidal"
+# ]
 sad_words = [
     "sad", "depressed", "unhappy", "angry", "miserable", "depressing",
-    "heartbroken", "upset", " bad ", "worried", "sorry", "dissapointed",
+    "heartbroken", "upset", " bad ", "worried", "sorry", "dissapointed", 
     "shoot my head", "cut my life into pieces", "kill me", "suicide", 
-    "my dick is small", "i want to die", "suicidal"
+    "my dick is small", "i want to die", "suicidal", "feel like shit", "gloomy",
+    "melancholy", "dispirited", "low-spirited", "somber", "slightly upset", "sorrowful", 
+    "dejected", "despondent", "miserable", "wretched", "heavy-hearted", "morose", 
+    "crestfallen", "grief-stricken", "devastated", "bereaved", "desolate",       
+    "anguished", "tormented", "dismayed", "despairing", "crushed",   "overwhelmed", "kill myself", "kms"
 ]
+
+mean_words = ["shut up", "fuck off", "fuck you", "fuck"]
 
 starter_encouragements = [
     "Cheer up!", "Hang in there.", "You are a great person"
