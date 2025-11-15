@@ -101,7 +101,8 @@ async def on_message(message):
     global data
     if message.author == client.user:
         return
- 
+
+    data = load_data()
     msg = message.content
     
     if msg == '/test':
@@ -114,6 +115,9 @@ async def on_message(message):
 
         if any(word in msg.lower() for word in sad_words):
             await message.channel.send(random.choice(options))
+
+        if any(word in msg.lower() for word in mean_words):
+            await message.channel.send("That's not very nice " + message.author.mention)
 
     if msg.startswith("/new"):
         encouraging_message = msg.split("/new ", 1)[1]
