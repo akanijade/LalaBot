@@ -10,6 +10,12 @@ from discord.ext import commands
 from discord import app_commands
 import youtube_dl
 import asyncio
+import json
+import os
+
+DATA_FILE = "data.json"
+
+
 
 sad_words = [
     "sad", "depressed", "unhappy", "angry", "miserable", "depressing",
@@ -22,9 +28,21 @@ starter_encouragements = [
     "Cheer up!", "Hang in there.", "You are a great person"
 ]
 
-if "responding" not in db.keys():
-    db["responding"] = True
+# if "responding" not in db.keys():
+#     db["responding"] = True
 
+data = load_data()
+
+def load_data():
+    if not os.path.exists(DATA_FILE):
+        with open(DATA_FILE, "w") as f:
+            json.dump({"responding": True, "encouragements": []}, f)
+    with open(DATA_FILE, "r") as f:
+        return json.load(f)
+
+def save_data(data):
+    with open(DATA_FILE, "w") as f:
+        json.dump(data, f, indent=4)
 
 def get_quote():
     response = requests.get("https://zenquotes.io/api/random")
@@ -33,20 +51,29 @@ def get_quote():
     return (quote)
 
 
+# def update_encouragements(encouraging_message):
+#     if "encouragements" in db.keys():
+#         encouragements = data["encouragements"]
+#         encouragements.append(encouraging_message)
+#         data["encouragements"] = encouragements
+#     else:
+#         data["encouragements"] = [encouraging_message]
 def update_encouragements(encouraging_message):
-    if "encouragements" in db.keys():
-        encouragements = db["encouragements"]
-        encouragements.append(encouraging_message)
-        db["encouragements"] = encouragements
-    else:
-        db["encouragements"] = [encouraging_message]
+    data = load_data()
+    data["encouragements"].append(encouraging_message)
+    save_data(data)
 
 
+# def delete_encouragement(index):
+#     encouragements = data["encouragements"]
+#     if len(encouragements) > index:
+#         del encouragements[index]
+#         data["encouragements"] = encouragements
 def delete_encouragement(index):
-    encouragements = db["encouragements"]
-    if len(encouragements) > index:
-        del encouragements[index]
-        db["encouragements"] = encouragements
+    data = load_data()
+    if index < len(data["encouragements"]):
+        del data["encouragements"][index]
+    save_data(data)
 
 intents = discord.Intents.default()
 intents.message_content = True
@@ -70,10 +97,10 @@ async def on_message(message):
     if msg == '/test':
         await message.channel.send('ping pong!')
         
-    if db["responding"]:
+    if data["responding"]:
         options = starter_encouragements
         if "encouragements" in db.keys():
-            options = options + db["encouragements"]
+            options = options + data["encouragements"]
 
         if any(word in msg.lower() for word in sad_words):
             await message.channel.send(random.choice(options))
@@ -88,24 +115,28 @@ async def on_message(message):
             if "encouragements" in db.keys():
                 index = int(msg.split("!del", 1)[1])
                 delete_encouragement(index)
-                encouragements = db["encouragements"]
+                encouragements = data["encouragements"]
             await message.channel.send(encouragements)
 
     if msg.startswith("/list"):
         encouragements = []
         if "encouragements" in db.keys():
-            encouragements = db["encouragements"]
+            encouragements = data["encouragements"]
         await message.channel.send(encouragements)
 
     if msg.startswith("/responding"):
         value = msg.split("!responding ", 1)[1]
-
-        if value.lower() == "true":
-            db["responding"] = True
-            await message.channel.send("Responding is on.")
-        else:
-            db["responding"] = False
-            await message.channel.send("Responding is off.")
+        data = load_data()
+        data["responding"] = (value.lower() == "true")
+        save_data(data)
+    
+        await message.channel.send(f"Responding is now {data['responding']}.")
+        # if value.lower() == "true":
+        #     data["responding"] = True
+        #     await message.channel.send("Responding is on.")
+        # else:
+        #     data["responding"] = False
+        #     await message.channel.send("Responding is off.")
     
 
 @tree.command()
