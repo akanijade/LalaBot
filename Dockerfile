@@ -1,16 +1,15 @@
-FROM python:3.12-slim
+FROM python:3.8-slim
 
-# Set working directory inside container
 WORKDIR /app
 
-# Copy your project files to /app
-COPY . .
-
-# Install system deps if needed
+# Install system dependencies
 RUN apt-get update && apt-get install -y ffmpeg
 
-# Install Python libs
+# Copy project
+COPY . .
+
+# Install Python dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Start the bot
+# Start your bot
 CMD ["python", "main.py"]
