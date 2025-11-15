@@ -15,8 +15,6 @@ import os
 
 DATA_FILE = "data.json"
 
-
-
 sad_words = [
     "sad", "depressed", "unhappy", "angry", "miserable", "depressing",
     "heartbroken", "upset", " bad ", "worried", "sorry", "dissapointed",
@@ -30,8 +28,6 @@ starter_encouragements = [
 
 # if "responding" not in db.keys():
 #     db["responding"] = True
-
-data = load_data()
 
 def load_data():
     if not os.path.exists(DATA_FILE):
@@ -80,6 +76,7 @@ intents.message_content = True
 intents.messages = True
 client = discord.Client(intents=intents)
 tree = app_commands.CommandTree(client)
+data = load_data()
 
 @client.event
 async def on_ready():
@@ -99,28 +96,28 @@ async def on_message(message):
         
     if data["responding"]:
         options = starter_encouragements
-        if "encouragements" in db.keys():
+        if "encouragements" in data:
             options = options + data["encouragements"]
 
         if any(word in msg.lower() for word in sad_words):
             await message.channel.send(random.choice(options))
 
-        if msg.startswith("/new"):
-            encouraging_message = msg.split("/new ", 1)[1]
-            update_encouragements(encouraging_message)
-            await message.channel.send("New encouraging message added.")
+    if msg.startswith("/new"):
+        encouraging_message = msg.split("/new ", 1)[1]
+        update_encouragements(encouraging_message)
+        await message.channel.send("New encouraging message added.")
 
-        if msg.startswith("/del"):
-            encouragements = []
-            if "encouragements" in db.keys():
-                index = int(msg.split("!del", 1)[1])
-                delete_encouragement(index)
-                encouragements = data["encouragements"]
-            await message.channel.send(encouragements)
+    if msg.startswith("/del"):
+        encouragements = []
+        if "encouragements" in data:
+            index = int(msg.split("!del", 1)[1])
+            delete_encouragement(index)
+            encouragements = data["encouragements"]
+        await message.channel.send(encouragements)
 
     if msg.startswith("/list"):
         encouragements = []
-        if "encouragements" in db.keys():
+        if "encouragements" in data:
             encouragements = data["encouragements"]
         await message.channel.send(encouragements)
 
@@ -190,8 +187,6 @@ async def help(interaction: discord.Interaction):
     )
     await interaction.response.send_message(embed=embed)
 
-
-keep_alive()
 while __name__ == '__main__':
   try:
     keep_alive()
