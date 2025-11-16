@@ -29,7 +29,7 @@ sad_words = [
     "melancholy", "dispirited", "low-spirited", "somber", "slightly upset", "sorrowful", 
     "dejected", "despondent", "miserable", "wretched", "heavy-hearted", "morose", 
     "crestfallen", "grief-stricken", "devastated", "bereaved", "desolate",       
-    "anguished", "tormented", "dismayed", "despairing", "crushed",   "overwhelmed", "kill myself", "kms"
+    "anguished", "tormented", "dismayed", "despairing", "crushed",   "overwhelmed", "kill myself", "kms","i'm gonna die","kms"
 ]
 
 mean_words = ["shut up", "fuck off", "fuck you", "fuck"]
